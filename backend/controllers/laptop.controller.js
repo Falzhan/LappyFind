@@ -14,7 +14,7 @@ export const getLaptops = async (req, res) => {
 export const createLaptop = async (req, res) => {
     const laptop = req.body; //user send data
     
-    if(!laptop.name || !laptop.specs || !laptop.price || !laptop.image) {
+    if(!laptop.name || !laptop.specs || !laptop.price || !laptop.image || !laptop.uploader || !laptop.source) {
             return res.status(400).json({ success:false, message: "Please fill all fields" });
      }
     
@@ -46,6 +46,55 @@ export const updateLaptop = async (req, res) => {
     }
 }; 
 
+
+
+export const upvoteLaptop = async (req, res) => {
+    const { id } = req.params;
+  
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ success: false, message: "Invalid Laptop ID" });
+    }
+  
+    try {
+      const laptop = await Laptop.findById(id);
+      if (!laptop) {
+        return res.status(404).json({ success: false, message: "Laptop not found" });
+      }
+  
+      laptop.upvotes += 1;
+      await laptop.save();
+  
+      res.status(200).json({ success: true, message: "Laptop upvoted", upvotes: laptop.upvotes });
+    } catch (error) {
+      console.error("Error in Upvoting Laptop: ", error.message);
+      res.status(500).json({ success: false, message: "Server Error" });
+    }
+  };
+  
+  export const downvoteLaptop = async (req, res) => {
+    const { id } = req.params;
+  
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ success: false, message: "Invalid Laptop ID" });
+    }
+  
+    try {
+      const laptop = await Laptop.findById(id);
+      if (!laptop) {
+        return res.status(404).json({ success: false, message: "Laptop not found" });
+      }
+  
+      laptop.downvotes += 1;
+      await laptop.save();
+  
+      res.status(200).json({ success: true, message: "Laptop downvoted", downvotes: laptop.downvotes });
+    } catch (error) {
+      console.error("Error in Downvoting Laptop: ", error.message);
+      res.status(500).json({ success: false, message: "Server Error" });
+    }
+  };
+
+
 export const deleteLaptop = async (req, res) => {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -58,4 +107,5 @@ export const deleteLaptop = async (req, res) => {
             console.error("Error in Deleting Laptop: ", error.message);
             res.status(500).json({ success: false, message: "Server Error" });
         }
+
 };

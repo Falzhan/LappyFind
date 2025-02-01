@@ -105,7 +105,7 @@ const LandingPage = () => {
 
       {/* Naming Schemes Explanation */}
       <Container maxW="container.xl" textAlign="center" py={6}>
-        <Text fontSize="xl" fontWeight="bold" mt={10} mb={4}>
+        <Text fontSize="xl" fontWeight="bold" mb={4}>
           Understanding Intel, AMD, and NVIDIA Naming Schemes
         </Text>
         <Text fontSize="md" color="gray.500">
@@ -180,7 +180,7 @@ const LandingPage = () => {
         />
       </Box>
 
-      <VStack spacing={6} textAlign="center" zIndex={1} mt={4} mb={20}>
+      <VStack spacing={6} textAlign="center" zIndex={1} mt={10} mb={10}>
       <RouterLink to="/articles">
             <Button colorScheme="teal" size="lg">
               Learn More
@@ -202,10 +202,7 @@ const LandingPage = () => {
           </Text>
           <Text fontSize="md" color={bottomTextColor} textAlign="justify">
             LappyFind is your ultimate destination for discovering laptops that
-            meet your needs. Our platform offers an extensive catalog of
-            laptops, enabling users to browse, compare, and select the perfect
-            machine. With community-driven insights and expert recommendations,
-            finding the right laptop has never been easier.
+            sdfsdfsdf
           </Text>
         </Container>
       </Box>

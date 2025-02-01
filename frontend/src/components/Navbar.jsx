@@ -66,25 +66,51 @@ const Navbar = () => {
   bg={colorMode === "light" ? "white" : "gray.800"} // Adapts to light/dark mode
   boxShadow="xl"
 >
-  <Flex h={16} alignItems="center" justifyContent="space-between">
-    {/* Left-aligned "LappyFind" */}
-    <Text
-      bgGradient="linear(to-b, teal.300, green.400)"
-      bgClip="text"
-      fontSize="5xl"
-      fontWeight="extrabold"
-    >
-      <Link to={"/"}>LappyFind 🖥️</Link>
-    </Text>
+<Flex h={16} alignItems="center" justifyContent="space-between">
+  {/* Left-aligned "LappyFind" */}
+  <Text
+    bgGradient="linear(to-b, teal.300, green.400)"
+    bgClip="text"
+    fontSize="5xl"
+    fontWeight="extrabold"
+  >
+    <Link to="/">LappyFind 🖥️</Link>
+  </Text>
 
-    {/* Right-aligned buttons */}
+  {/* Right-aligned navigation links and buttons */}
+  <Flex alignItems="center" gap={6}>
+    {/* Navigation Links */}
+    <HStack spacing={6}>
+      <Link to="/find-laptop">
+        <Text _hover={{ color: "teal.400"}}>
+          Find Laptop
+        </Text>
+      </Link>
+      <Link to="/home">
+        <Text _hover={{ color: "teal.400"}}>
+          Discover Catalog
+        </Text>
+      </Link>
+      <Link to="/articles">
+        <Text _hover={{ color: "teal.400"}}>
+          Articles
+        </Text>
+      </Link>
+      <Link to="/forums">
+        <Text _hover={{ color: "teal.400"}}>
+          Forums
+        </Text>
+      </Link>
+    </HStack>
+
+    {/* Auth Buttons */}
     <HStack spacing={4}>
       {isAuthenticated ? (
         <Box>
           <Button variant="link" onClick={onOpen} fontWeight="bold">
             Welcome, {user?.username || user?.email || "User"}!
           </Button>
-          <Link to={"/input"}>
+          <Link to="/input">
             <Button>
               <PlusSquareIcon fontSize={20} />
             </Button>
@@ -93,10 +119,10 @@ const Navbar = () => {
         </Box>
       ) : (
         <>
-          <Link to={"/login"}>
+          <Link to="/login">
             <Button>Login</Button>
           </Link>
-          <Link to={"/register"}>
+          <Link to="/register">
             <Button>Register</Button>
           </Link>
         </>
@@ -106,6 +132,9 @@ const Navbar = () => {
       </Button>
     </HStack>
   </Flex>
+</Flex>
+
+
 
       {/* Modal to display user laptops */}
       <Modal isOpen={isOpen} onClose={onClose} size="xl">

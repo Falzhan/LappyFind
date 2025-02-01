@@ -8,7 +8,7 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const RegisterPage = () => {
@@ -49,6 +49,27 @@ const RegisterPage = () => {
     }
   };
 
+  const lightBackgrounds = [
+    "src/images/backgroundlight.png",
+    "src/images/backgroundlight2.png",
+  ];
+
+  const darkBackgrounds = [
+    "src/images/backgrounddark.png",
+    "src/images/backgrounddark2.png",
+  ];
+
+  const backgrounds = useColorModeValue(lightBackgrounds, darkBackgrounds);
+  const [bgIndex, setBgIndex] = useState(0);
+
+  // Background image slideshow effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % backgrounds.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [backgrounds.length]);
+
   return (
     <Container 
       maxW={"container.sm"} 
@@ -57,6 +78,24 @@ const RegisterPage = () => {
       justifyContent="center"
       alignItems="center"
     >
+
+{/* Background Images with Fade Effect */}
+{backgrounds.map((src, i) => (
+          <Box
+            key={i}
+            position="absolute"
+            top="0"
+            left="0"
+            w="100%"
+            h="100%"
+            backgroundImage={`url(${src})`}
+            backgroundSize="cover"
+            backgroundPosition="center"
+            opacity={i === bgIndex ? 1 : 0}
+            transition="opacity 2s ease-in-out"
+          />
+        ))}
+
       <VStack spacing={8} w="full">
         <Heading as={"h1"} size={"2xl"} textAlign={"center"}>
           Create an Account

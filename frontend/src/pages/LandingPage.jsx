@@ -51,7 +51,7 @@ const LandingPage = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setBgIndex((prev) => (prev + 1) % backgrounds.length);
-    }, 5000);
+    }, 3000);
     return () => clearInterval(interval);
   }, [backgrounds.length]);
 
@@ -97,7 +97,7 @@ const LandingPage = () => {
           </Text>
           <RouterLink to="/home">
             <Button colorScheme="teal" size="lg">
-              Discover Catalog
+              Get Started
             </Button>
           </RouterLink>
         </VStack>

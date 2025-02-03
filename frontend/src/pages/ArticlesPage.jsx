@@ -1,213 +1,272 @@
-import {
-  Container,
-  VStack,
-  Button,
-  Text,
-  Box,
-  Image,
-  HStack,
-  useColorModeValue,
-  IconButton,
+import { 
+  Box, 
+  Image, 
+  Text, 
+  Link, 
+  VStack, 
+  HStack, 
+  Flex, 
+  Heading, 
+  useColorModeValue, 
+  Collapse, 
+  Button 
 } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { useState } from "react";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
-const LandingPage = () => {
-  // Carousel images
-  const images = [
-    { src: "src/images/AMDSummary.jpg", alt: "AMD Summary" },
-    { src: "src/images/IntelSummary.jpg", alt: "Intel Summary" },
-    { src: "src/images/NvideaSummary.jpg", alt: "Nvidea Summary" },
-  ];
+const articlesGroup1 = [
+  {
+    title: "Should you Buy an AMD Ryzen or Intel Laptop?",
+    subtitle: "When it comes to buying a new laptop, one of the key decisions you need to make is choosing between AMD Ryzen and Intel processors. Both AMD and Intel have been competing fiercely in the laptop market, with each offering their own set of advantages and features. In this article, we will delve into the latest product information to demystify the letters and numbers associated with these processors and help you make an informed decision.... ",
+    image: "https://i.ytimg.com/vi/nouIMbgsvAU/maxresdefault.jpg",
+    link: "https://www.hardsoftcomputers.co.uk/blog/leasing/should-you-buy-an-amd-ryzen-or-intel-laptop/"
+  },
+  {
+    title: "Intel processors explained: What is Core i3, i5, i7, Ultra and Pentium?",
+    subtitle: "The most confusing part of buying a computer is the array of CPUs (also known as processors). Which? explains what you need to know about Intel processors. The most common brand of processor in laptops you can buy is Intel. However, Intel's myriad of marketing names for its various processors can make comparisons extremely tricky... ",
+    image: "https://media.product.which.co.uk/prod/images/ar_2to1_900x450/24aac61ea445-shutterstock2347088611.webp",
+    link: "https://www.which.co.uk/reviews/laptops/article/intel-processors-explained-what-is-core-i3-i5-i7-and-pentium-av6235O66IQP"
+  },
+  {
+    title: "Understand How AMD Name Their Mobile CPU",
+    subtitle: "Hi, today we gonna talk about how AMD names their mobile CPU. From this year AMD will apply the new naming scheme for their mobile CPU and it will be extremely helpful when considering an AMD laptop if you fully understand how AMD name their mobile CPU. Like on paper it’s really not that easy to tell the performance difference between 7640U & 7630U. So let’s dive in...",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQic8MNp2prL1ewyGAwaEjWmOYcZ5IYbdMXdg&s",
+    link: "https://www.msi.com/blog/understand-how-amd-name-their-mobile-cpu"
+  }
+];
 
-  const [currentImage, setCurrentImage] = useState(0);
+const articlesGroup2 = [
+  {
+    title: "Discrete VS Integrated Laptop GPU: Which one to choose?",
+    subtitle: "If you’re reading this, there is a good chance you’re in the market for a new laptop. And maybe while doing research and checking laptop specs, you came across terms like “discrete graphics”, “dedicated GPU”, “integrated GPU” … and you started wondering what exactly the difference is and which one is suitable for your needs. This article aims to explain the two variants and provide some pointers on how to choose the one that best fits your needs...",
+    image: "https://i.redd.it/7jtrn601ezo91.jpg",
+    link: "https://www.asus.com/content/discrete-vs-integrated-laptop-gpu-which-one-to-choose/"
+  },
+  {
+    title: "AMD Radeon iGPU vs. Intel Iris Xe: What's the Best Integrated Graphics?",
+    subtitle: "If you're buying a budget laptop or desktop PC, a discrete GPU probably isn't in your plan. But that doesn't mean you should settle for any CPU with an integrated GPU. And with AMD and Intel integrating GPUs that feature tech used in their more powerful discrete GPU products, you might not even need a separate video card. So, which processor should you get if you don't want to spend on a discrete graphics card but still want to play some games?...",
+    image: "https://static1.makeuseofimages.com/wordpress/wp-content/uploads/2023/05/intel-iris-xe-vs-amd-radeon-graphics.jpg?q=70&fit=crop&w=1140&h=&dpr=1",
+    link: "https://www.makeuseof.com/amd-radeon-igpu-vs-intel-iris-xe/"
+  },
+  {
+    title: "Everything About NVIDIA’s GPU Naming Scheme: RTX, GTX, GT",
+    subtitle: "It’s no secret that Nvidia is the go-to GPU brand for many users, thanks in part to their gaming experience and reliability. However, for a non-tech-savvy user, differentiating between the GPU tiers could be difficult, as the company has changed its naming scheme in the last few years. As a result, here is everything you need to know about Nvidia’s GPU naming scheme...",
+    image: "https://fossbytes.com/wp-content/uploads/2022/09/Nvidia-rtx-4080-vs-3080-Ti-vs-3080.jpg",
+    link: "https://fossbytes.com/nvidia-gpu-naming-scheme/"
+  }
+];
 
-  // Auto-slide functionality for carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [images.length]);
+const articlesGroup3 = [
+  {
+    title: "How Much RAM Do I Need for My Laptop? A Complete Guide",
+    subtitle: "In the world of computing, computer memory, particularly RAM (Random Access Memory), plays a crucial role in determining your laptop’s performance. But how much RAM do you really need? Is 16GB of RAM good? Can you have too much RAM? These are common questions that many users grapple with when choosing a new laptop or considering an upgrade. In this comprehensive guide, we’ll demystify RAM, explore how much you need for different tasks, and help you make an informed decision about the right amount of RAM for your laptop...",
+    image: "https://www.electronicsbazaar.com/pub/media/magefan_blog/ram.png",
+    link: "https://www.hp.com/us-en/shop/tech-takes/how-much-ram-do-i-need-in-laptop"
+  },
+  {
+    title: "Choosing The Perfect Laptop Storage Capacity: A Guide",
+    subtitle: "When you’re looking for the right laptop, you may be wondering, ‘How much storage do I actually need on my laptop? Storage refers to how much your computer can hold, including apps, files, pictures, and videos. The more storage you have, the more things your computer can keep, and it can find them quicker when you want them. However, having a lot of space may cost you a lot of money; therefore, check on your needs and the amount you are willing to spend on it...",
+    image: "https://www.qilingtech.com/img/is-c-drive-ssd/ssd-and-hdd.png",
+    link: "https://pcviewed.com/how-much-storage-do-you-need-on-laptop/"
+  }
+];
 
-  const bottomTextColor = useColorModeValue("white", "gray.800");
+// Sources data
+const sources = [
+  {
+    title: "r/laptops",
+    image: "https://www.iconpacks.net/icons/2/free-reddit-logo-icon-2436-thumb.png",
+    link: "https://www.reddit.com/r/laptops/"
+  },
+  {
+    title: "r/GamingLaptops",
+    image: "https://www.iconpacks.net/icons/2/free-reddit-logo-icon-2436-thumb.png",
+    link: "https://www.reddit.com/r/GamingLaptops/"
+  },
+  {
+    title: "r/SuggestALaptop",
+    image: "https://www.iconpacks.net/icons/2/free-reddit-logo-icon-2436-thumb.png",
+    link: "https://www.reddit.com/r/SuggestALaptop/"
+  },
+  {
+    title: "laptop-forums",
+    image: "https://i1.feedspot.com/200/5191298.jpg?t=1598883512",
+    link: "https://www.laptop-forums.com/"
+  }
+];
 
-  // Background images for light and dark themes
-  const lightBackgrounds = [
-    "src/images/backgroundlight.png",
-    "src/images/backgroundlight2.png",
-  ];
+const ArticlesPage = () => {
+  const bgColor = useColorModeValue("white", "gray.800"); // Dynamic background
+  const textColor = useColorModeValue("gray.800", "white"); // Dynamic text color
+  const borderColor = useColorModeValue("gray.300", "gray.600"); // Border adapts to mode
 
-  const darkBackgrounds = [
-    "src/images/backgrounddark.png",
-    "src/images/backgrounddark2.png",
-  ];
-
-  const backgrounds = useColorModeValue(lightBackgrounds, darkBackgrounds);
-  const [bgIndex, setBgIndex] = useState(0);
-
-  // Background image slideshow effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBgIndex((prev) => (prev + 1) % backgrounds.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [backgrounds.length]);
+  // State for collapsible sections
+  const [isOpen1, setIsOpen1] = useState(true);
+  const [isOpen2, setIsOpen2] = useState(false);
+  const [isOpen3, setIsOpen3] = useState(false);
 
   return (
-    <Box>
-      {/* Welcome Section */}
-      <Container
-        maxW="100%"
-        h="90vh"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        position="relative"
-      >
-        {/* Background Images with Fade Effect */}
-        {backgrounds.map((src, i) => (
-          <Box
-            key={i}
-            position="absolute"
-            top="0"
-            left="0"
-            w="100%"
-            h="100%"
-            backgroundImage={`url(${src})`}
-            backgroundSize="cover"
-            backgroundPosition="center"
-            opacity={i === bgIndex ? 1 : 0}
-            transition="opacity 2s ease-in-out"
-          />
-        ))}
-
-        <VStack spacing={6} textAlign="center" zIndex={1}>
-          <Text
-            fontSize="8xl"
-            fontWeight="bold"
-            bgGradient="linear(to-r, teal.300, green.400)"
-            bgClip="text"
-          >
-            Welcome to LappyFind
-          </Text>
-          <Text fontSize="3xl" color="gray.500">
-            Find and Discover the Perfect Laptop for You.
-          </Text>
-          <RouterLink to="/home">
-            <Button colorScheme="teal" size="lg">
-              Discover Catalog
-            </Button>
-          </RouterLink>
-        </VStack>
-      </Container>
-
-      {/* Naming Schemes Explanation */}
-      <Container maxW="container.xl" textAlign="center" py={6}>
-        <Text fontSize="xl" fontWeight="bold" mb={4}>
-          Understanding Intel, AMD, and NVIDIA Naming Schemes
-        </Text>
-        <Text fontSize="md" color="gray.500">
-          Intel, AMD and NVIDIA use specific naming conventions to identify their
-          processors. Intel's naming scheme includes the brand, generation,
-          SKU, and suffix (e.g., Intel Core i7-10750H). AMD's naming scheme
-          includes the brand, generation, SKU, and suffix (e.g., AMD Ryzen 7
-          4800H). 
-        </Text>
-      </Container>
-
-      {/* Carousel Section */}
-      <Box
-        position="relative"
-        height="60vh"
-        width="100%"
-        overflow="hidden"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
-        {/* Images */}
-        <HStack
-          spacing={0}
-          height="100%"
-          width={`${images.length * 100}%`}
-          transform={`translateX(-${currentImage * 100}%)`}
-          transition="transform 1s ease-in-out"
+    <Box position="relative" p={10}>
+      <Flex gap={6} alignItems="flex-start">
+        
+        {/* Left Side Box (Articles) */}
+        <Box
+          p={10}
+          borderWidth={1}
+          borderRadius="md"
+          boxShadow="md"
+          flex="1"
+          maxW="calc(100% - 380px)"
+          bg={bgColor}
+          borderColor={borderColor}
         >
-          {images.map((image, index) => (
-            <Box
-              key={index}
-              flex="0 0 100%"
-              height="100%"
+          <Heading size="xl" mb={4} color={textColor}>Articles</Heading>
+
+          {/* Main Articles 1 Section */}
+          <Box w="full">
+            <Button 
+              onClick={() => setIsOpen1(!isOpen1)} 
+              w="full" 
+              justifyContent="space-between"
               display="flex"
-              justifyContent="center"
               alignItems="center"
+              fontSize="xl"
+              fontWeight="bold"
+              color="black.500"
+              borderBottom="1px solid"
+              borderColor={borderColor}
+              py={2}
             >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                objectFit="contain"
-                maxH="100%"
-                maxW="100%"
-              />
-            </Box>
-          ))}
-        </HStack>
-
-        {/* Navigation Buttons */}
-        <IconButton
-          icon={<ArrowBackIcon />}
-          position="absolute"
-          left="10px"
-          top="50%"
-          transform="translateY(-50%)"
-          onClick={() =>
-            setCurrentImage((prev) => (prev - 1 + images.length) % images.length)
-          }
-          colorScheme="teal"
-        />
-        <IconButton
-          icon={<ArrowForwardIcon />}
-          position="absolute"
-          right="10px"
-          top="50%"
-          transform="translateY(-50%)"
-          onClick={() =>
-            setCurrentImage((prev) => (prev + 1) % images.length)
-          }
-          colorScheme="teal"
-        />
-      </Box>
-
-      <VStack spacing={6} textAlign="center" zIndex={1} mt={10} mb={10}>
-      <RouterLink to="/articles">
-            <Button colorScheme="teal" size="lg">
-              Learn More
+              About CPUs
+              {isOpen1 ? <ChevronUpIcon /> : <ChevronDownIcon />}
             </Button>
-          </RouterLink>
-      </VStack>
 
-      {/* Footer */}
-      <Box py={10} bg="teal.500">
-        <Container maxW="container.xl">
-          <Text
-            fontSize="2xl"
-            fontWeight="bold"
-            textAlign="center"
-            mb={6}
-            color={bottomTextColor}
-          >
-            About LappyFind
-          </Text>
-          <Text fontSize="md" color={bottomTextColor} textAlign="justify">
-            LappyFind is your ultimate destination for discovering laptops that
-            sdfsdfsdf
-          </Text>
-        </Container>
-      </Box>
+            <Collapse in={isOpen1} animateOpacity>
+              <VStack align="start" spacing={5} w="full" mt={3}>
+                {articlesGroup1.map((article, index) => (
+                  <HStack key={index} w="full" p={3} borderWidth={1} borderRadius="md" boxShadow="sm" borderColor={borderColor}>
+                    <Image src={article.image} w="270px" h="200px" borderRadius="md" objectFit="cover"/>
+                    <Box>
+                      <Link href={article.link} isExternal fontSize="xl" fontWeight="bold" color="teal.400">
+                        {article.title}
+                      </Link>
+                      <Text fontSize="md" color={textColor}>
+                        {article.subtitle}
+                      </Text>
+                    </Box>
+                  </HStack>
+                ))}
+              </VStack>
+            </Collapse>
+          </Box>
+
+          {/* Main Articles 2 Section */}
+          <Box w="full" mt={5}>
+            <Button 
+              onClick={() => setIsOpen2(!isOpen2)} 
+              w="full" 
+              justifyContent="space-between"
+              display="flex"
+              alignItems="center"
+              fontSize="xl"
+              fontWeight="bold"
+              color="black.500"
+              borderBottom="1px solid"
+              borderColor={borderColor}
+              py={2}
+            >
+              About GPUs
+              {isOpen2 ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            </Button>
+
+            <Collapse in={isOpen2} animateOpacity>
+              <VStack align="start" spacing={5} w="full" mt={3}>
+                {articlesGroup2.map((article, index) => (
+                  <HStack key={index} w="full" p={3} borderWidth={1} borderRadius="md" boxShadow="sm" borderColor={borderColor}>
+                    <Image src={article.image} w="270px" h="200px" borderRadius="md" objectFit="cover"/>
+                    <Box>
+                      <Link href={article.link} isExternal fontSize="xl" fontWeight="bold" color="teal.400">
+                        {article.title}
+                      </Link>
+                      <Text fontSize="md" color={textColor}>
+                        {article.subtitle}
+                      </Text>
+                    </Box>
+                  </HStack>
+                ))}
+              </VStack>
+            </Collapse>
+          </Box>
+
+          {/* Main Articles 3 Section */}
+          <Box w="full" mt={5}>
+            <Button 
+              onClick={() => setIsOpen3(!isOpen3)} 
+              w="full" 
+              justifyContent="space-between"
+              display="flex"
+              alignItems="center"
+              fontSize="xl"
+              fontWeight="bold"
+              color="black.500"
+              borderBottom="1px solid"
+              borderColor={borderColor}
+              py={2}
+            >
+              About Memory & Storage
+              {isOpen3 ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            </Button>
+
+            <Collapse in={isOpen3} animateOpacity>
+              <VStack align="start" spacing={5} w="full" mt={3}>
+                {articlesGroup3.map((article, index) => (
+                  <HStack key={index} w="full" p={3} borderWidth={1} borderRadius="md" boxShadow="sm" borderColor={borderColor}>
+                    <Image src={article.image} w="270px" h="200px" borderRadius="md" objectFit="cover"/>
+                    <Box>
+                      <Link href={article.link} isExternal fontSize="xl" fontWeight="bold" color="teal.400">
+                        {article.title}
+                      </Link>
+                      <Text fontSize="md" color={textColor}>
+                        {article.subtitle}
+                      </Text>
+                    </Box>
+                  </HStack>
+                ))}
+              </VStack>
+            </Collapse>
+          </Box>
+        </Box>
+
+        {/* Top Right Box (Sources) */}
+        <Box
+          p={5}
+          borderWidth={1}
+          borderRadius="md"
+          boxShadow="lg"
+          w="320px"
+          position={{ base: "relative", lg: "absolute" }}
+          right={10}
+          top={10}
+          bg={bgColor}
+          borderColor={borderColor}
+        >
+          <Heading size="md" mb={4} color={textColor}>More Sources</Heading>
+          <VStack align="start" spacing={4}>
+            {sources.map((source, index) => (
+              <HStack key={index} w="full">
+                <Box>
+                  <Link href={source.link} isExternal fontSize="sm" fontWeight="bold" color="teal.400">
+                    {source.title}
+                  </Link>
+                </Box>
+                <Image src={source.image} boxSize="50px" borderRadius="md" />
+              </HStack>
+            ))}
+          </VStack>
+        </Box>
+      </Flex>
     </Box>
   );
 };
 
-export default LandingPage;
+export default ArticlesPage;

@@ -83,7 +83,7 @@ const Navbar = () => {
     <HStack spacing={6}>
       <Link to="/find-laptop">
         <Text _hover={{ color: "teal.400"}}>
-          Find Laptop
+        Find Laptop
         </Text>
       </Link>
       <Link to="/home">
@@ -96,9 +96,9 @@ const Navbar = () => {
           Articles
         </Text>
       </Link>
-      <Link to="/forums">
+      <Link to="/stores">
         <Text _hover={{ color: "teal.400"}}>
-          Forums
+          Stores
         </Text>
       </Link>
     </HStack>

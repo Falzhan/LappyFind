@@ -53,6 +53,12 @@ const articlesGroup2 = [
     subtitle: "It’s no secret that Nvidia is the go-to GPU brand for many users, thanks in part to their gaming experience and reliability. However, for a non-tech-savvy user, differentiating between the GPU tiers could be difficult, as the company has changed its naming scheme in the last few years. As a result, here is everything you need to know about Nvidia’s GPU naming scheme...",
     image: "https://fossbytes.com/wp-content/uploads/2022/09/Nvidia-rtx-4080-vs-3080-Ti-vs-3080.jpg",
     link: "https://fossbytes.com/nvidia-gpu-naming-scheme/"
+  },
+  {
+    title: "What Is an External Graphics Processing Unit?",
+    subtitle: "While eGPUs are a somewhat niche technology, the devices may soon be mainstream thanks to hybrid work. An eGPU is a GPU that can be attached externally to a computer, typically a laptop or small desktop computer that doesn’t have the space to handle a full-fledged GPU internally. An eGPU can attach to the computer in a variety of ways; the most common uses an external enclosure for a GPU expansion card that attaches to the machine through a Thunderbolt or USB4 connector...",
+    image: "https://i.ytimg.com/vi/aM3D3cZmqn0/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAeGyMo98Re-HXLqTxTXhnDNHCH1w",
+    link: "https://biztechmagazine.com/article/2022/08/what-external-graphics-processing-unit-perfcon"
   }
 ];
 
@@ -89,9 +95,19 @@ const sources = [
     link: "https://www.reddit.com/r/SuggestALaptop/"
   },
   {
+    title: "r/eGPU",
+    image: "https://www.iconpacks.net/icons/2/free-reddit-logo-icon-2436-thumb.png",
+    link: "https://www.reddit.com/r/eGPU/"
+  },
+  {
     title: "laptop-forums",
     image: "https://i1.feedspot.com/200/5191298.jpg?t=1598883512",
     link: "https://www.laptop-forums.com/"
+  },
+  {
+    title: "eGPU",
+    image: "https://media.licdn.com/dms/image/v2/C560BAQFHBzl4Es_8Gg/company-logo_200_200/company-logo_200_200/0/1631314719855?e=2147483647&v=beta&t=8gi59w1rzANYWvaNuXzsJ-3uGYL9yL1D3qgdgfnz9Oo",
+    link: "https://egpu.io/forums/"
   }
 ];
 

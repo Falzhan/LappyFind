@@ -95,7 +95,7 @@ const LandingPage = () => {
           <Text fontSize="3xl" color="gray.500">
             Find and Discover the Perfect Laptop for You.
           </Text>
-          <RouterLink to="/home">
+          <RouterLink to="/find">
             <Button colorScheme="teal" size="lg">
               Get Started
             </Button>

@@ -81,7 +81,7 @@ const Navbar = () => {
   <Flex alignItems="center" gap={6}>
     {/* Navigation Links */}
     <HStack spacing={6}>
-      <Link to="/find-laptop">
+      <Link to="/find">
         <Text _hover={{ color: "teal.400"}}>
         Find Laptop
         </Text>

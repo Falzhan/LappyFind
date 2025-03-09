@@ -1,4 +1,4 @@
-import { Container, SimpleGrid, VStack, Box, Text, Input, HStack, Button } from "@chakra-ui/react";
+import { Container, SimpleGrid, VStack, Box, Text, Input, HStack, Button, ButtonGroup } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLaptopStore } from "../catalog/laptop";
@@ -9,6 +9,8 @@ const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState(""); // State for search input
   const [filteredLaptops, setFilteredLaptops] = useState([]); // State for filtered laptops
   const [sortOrder, setSortOrder] = useState("default"); // State for sort order
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
 
   useEffect(() => {
     fetchLaptops();
@@ -50,6 +52,16 @@ const HomePage = () => {
 
     setFilteredLaptops(sortedLaptops);
   }, [searchQuery, laptops, sortOrder]);
+
+  // Calculate pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredLaptops.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredLaptops.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const toggleSortOrder = () => {
     if (sortOrder === "default") {
@@ -100,12 +112,12 @@ const HomePage = () => {
           spacing={10}
           w={"full"}
         >
-          {filteredLaptops.map((laptop) => (
+          {currentItems.map((laptop) => (
             <LaptopCard key={laptop._id} laptop={laptop} />
           ))}
         </SimpleGrid>
 
-        {filteredLaptops.length === 0 && (
+        {filteredLaptops.length === 0 ? (
           <Text fontSize="xl" textAlign="center" fontWeight="bold" color="gray.500">
             No laptops match your search. <br />
             You can add a new one by going to{" "}
@@ -117,6 +129,32 @@ const HomePage = () => {
               </Link>
             </Box>
           </Text>
+        ) : (
+          <ButtonGroup spacing={2} mt={4}>
+            <Button
+              colorScheme="teal"
+              isDisabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              Prev
+            </Button>
+            {[...Array(totalPages)].map((_, index) => (
+              <Button
+                key={index + 1}
+                colorScheme={currentPage === index + 1 ? "teal" : "gray"}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+            <Button
+              colorScheme="teal"
+              isDisabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              Next
+            </Button>
+          </ButtonGroup>
         )}
       </VStack>
     </Container>

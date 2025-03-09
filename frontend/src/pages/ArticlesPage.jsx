@@ -45,7 +45,7 @@ const articlesGroup2 = [
   {
     title: "AMD Radeon iGPU vs. Intel Iris Xe: What's the Best Integrated Graphics?",
     subtitle: "If you're buying a budget laptop or desktop PC, a discrete GPU probably isn't in your plan. But that doesn't mean you should settle for any CPU with an integrated GPU. And with AMD and Intel integrating GPUs that feature tech used in their more powerful discrete GPU products, you might not even need a separate video card. So, which processor should you get if you don't want to spend on a discrete graphics card but still want to play some games?...",
-    image: "https://static1.makeuseofimages.com/wordpress/wp-content/uploads/2023/05/intel-iris-xe-vs-amd-radeon-graphics.jpg?q=70&fit=crop&w=1140&h=&dpr=1",
+    image: "https://i.ytimg.com/vi/04zj_n2dSPU/maxresdefault.jpg",
     link: "https://www.makeuseof.com/amd-radeon-igpu-vs-intel-iris-xe/"
   },
   {

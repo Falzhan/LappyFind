@@ -25,8 +25,13 @@ import LaptopCard from "../components/LaptopCard";
 
 const FindPage = () => {
   const navigate = useNavigate();
-  const { laptops } = useLaptopStore();
+  const { fetchLaptops, laptops } = useLaptopStore();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { 
+    isOpen: isNoLaptopsOpen, 
+    onOpen: onNoLaptopsOpen, 
+    onClose: onNoLaptopsClose 
+  } = useDisclosure();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     usage: "",
@@ -34,47 +39,103 @@ const FindPage = () => {
     screenSize: "",
   });
   const [filteredLaptops, setFilteredLaptops] = useState([]);
+  const [availableLaptops, setAvailableLaptops] = useState(0);
 
   const handleNext = () => {
     setStep(step + 1);
   };
 
+  useEffect(() => {
+    fetchLaptops();
+  }, [fetchLaptops]);
+
   const handleBack = () => {
     setStep(step - 1);
   };
 
+  const matchUsage = (laptop) => {
+    switch (formData.usage) {
+      case 'browsing':
+        return laptop.specs.toLowerCase().includes('celeron');
+      case 'documents':
+        return laptop.specs.toLowerCase().includes('core i3') || 
+               laptop.specs.toLowerCase().includes('ryzen 3');
+      case 'work':
+        return laptop.specs.toLowerCase().includes('core i5') || 
+               laptop.specs.toLowerCase().includes('ryzen 5');
+      case 'gaming':
+        return (laptop.specs.toLowerCase().includes('rtx') || 
+               laptop.specs.toLowerCase().includes('gtx')) &&
+               laptop.specs.toLowerCase().includes('nvidia');
+      default:
+        return false;
+    }
+  };
+
+  const matchScreenSize = (laptop) => {
+    switch (formData.screenSize) {
+      case 'small':
+        return laptop.name.toLowerCase().includes('14"') || 
+               laptop.name.toLowerCase().includes('11.6"');
+      case 'medium':
+        return laptop.name.toLowerCase().includes('15.6"');
+      case 'large':
+        return laptop.name.toLowerCase().includes('16"');
+      default:
+        return false;
+    }
+  };
+
+  const matchBudget = (laptop) => {
+    const budgetMap = {
+      '15000': 15000,
+      '20000': 20000,
+      '30000': 30000,
+      '40000': 40000,
+      '50000': 50000
+    };
+    
+    const maxBudget = budgetMap[formData.budget];
+    if (formData.budget === '50000') {
+      return true; // For "₱50,000 and above" option
+    }
+    return laptop.price <= maxBudget;
+  };
+
   const handleSearch = () => {
-    // Filter laptops based on criteria
-    const filtered = laptops.filter((laptop) => {
-      // Usage-based filtering
-      const usageMatch = {
-        browsing: (specs) => specs.toLowerCase().includes('celeron') || specs.toLowerCase().includes('pentium'),
-        documents: (specs) => specs.toLowerCase().includes('i3') || specs.toLowerCase().includes('ryzen 3'),
-        work: (specs) => specs.toLowerCase().includes('i5') || specs.toLowerCase().includes('ryzen 5'),
-        gaming: (specs) => specs.toLowerCase().includes('i5') || specs.toLowerCase().includes('ryzen 5') || specs.toLowerCase().includes('rtx'),
-      };
-
-      // Screen size filtering
-      const screenSizeMatch = {
-        small: (specs) => specs.toLowerCase().includes('14'),
-        medium: (specs) => specs.toLowerCase().includes('15.6'),
-        large: (specs) => specs.toLowerCase().includes('16'),
-      };
-
-      // Budget filtering
-      const budgetNum = parseInt(formData.budget);
-      const priceMatch = laptop.price <= budgetNum;
-
-      return (
-        usageMatch[formData.usage]?.(laptop.specs) &&
-        screenSizeMatch[formData.screenSize]?.(laptop.specs) &&
-        priceMatch
-      );
-    });
+    const filtered = laptops.filter((laptop) => 
+      matchUsage(laptop) && matchScreenSize(laptop) && matchBudget(laptop)
+    );
 
     setFilteredLaptops(filtered);
-    onOpen(); 
+    onOpen();
   };
+
+  const updateAvailableLaptopsCount = () => {
+    const filtered = laptops.filter((laptop) => {
+      const usageMatch = !formData.usage || matchUsage(laptop);
+      const screenMatch = !formData.screenSize || matchScreenSize(laptop);
+      const budgetMatch = !formData.budget || matchBudget(laptop);
+      
+      return usageMatch && screenMatch && budgetMatch;
+    });
+
+    setAvailableLaptops(filtered.length);
+    
+    if (filtered.length === 0 && (formData.usage || formData.budget || formData.screenSize)) {
+      onNoLaptopsOpen();
+    }
+  };
+
+  useEffect(() => {
+    if (laptops.length > 0) {
+      setAvailableLaptops(laptops.length);
+    }
+  }, [laptops]);
+
+  useEffect(() => {
+    updateAvailableLaptopsCount();
+  }, [formData]);
 
   const boxBg = useColorModeValue("white", "gray.700");
   const boxShadow = useColorModeValue("lg", "dark-lg");
@@ -287,6 +348,41 @@ const FindPage = () => {
             )}
           </Stack>
         </VStack>
+
+        {/* Sticky Count Bar */}
+        <Box
+          position="fixed"
+          bottom="0"
+          left="0"
+          right="0"
+          bg={boxBg}
+          p={4}
+          borderTop="1px"
+          borderColor="gray.200"
+          boxShadow="0 -4px 6px -1px rgba(0, 0, 0, 0.1)"
+          zIndex={1000}
+        >
+          <Container maxW="container.md">
+            <Text textAlign="center" fontWeight="bold" color={textColor}>
+              Available Laptops: {availableLaptops}
+            </Text>
+          </Container>
+        </Box>
+
+        {/* No Laptops Modal */}
+        <Modal isOpen={isNoLaptopsOpen} onClose={onNoLaptopsClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>No Laptops Available</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <Text>
+                There are no laptops matching your current selection criteria. 
+                Please try adjusting your filters.
+              </Text>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
 
         {/* Results Modal */}
         <Modal isOpen={isOpen} onClose={onClose} size="6xl" scrollBehavior="inside">

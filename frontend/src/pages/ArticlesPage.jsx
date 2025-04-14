@@ -11,7 +11,7 @@ import {
   Collapse, 
   Button 
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 const articlesGroup1 = [
@@ -116,171 +116,213 @@ const ArticlesPage = () => {
   const textColor = useColorModeValue("gray.800", "white"); // Dynamic text color
   const borderColor = useColorModeValue("gray.300", "gray.600"); // Border adapts to mode
 
+  // Add background-related constants and state
+  const lightBackgrounds = [
+    "src/images/backgroundlight.png",
+    "src/images/backgroundlight2.png",
+  ];
+
+  const darkBackgrounds = [
+    "src/images/backgrounddark.png",
+    "src/images/backgrounddark2.png",
+  ];
+
+  const backgrounds = useColorModeValue(lightBackgrounds, darkBackgrounds);
+  const [bgIndex, setBgIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % backgrounds.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [backgrounds.length]);
+
   // State for collapsible sections
   const [isOpen1, setIsOpen1] = useState(true);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
 
   return (
-    <Box position="relative" p={10}>
-      <Flex gap={6} alignItems="flex-start">
-        
-        {/* Left Side Box (Articles) */}
+    <Box position="relative" minH="90vh">
+      {backgrounds.map((src, i) => (
         <Box
-          p={10}
-          borderWidth={1}
-          borderRadius="md"
-          boxShadow="md"
-          flex="1"
-          maxW="calc(100% - 380px)"
-          bg={bgColor}
-          borderColor={borderColor}
-        >
-          <Heading size="xl" mb={4} color={textColor}>Articles</Heading>
+          key={i}
+          position="absolute"
+          top="0"
+          left="0"
+          w="100%"
+          h="100%"
+          backgroundImage={`url(${src})`}
+          backgroundSize="cover"
+          backgroundPosition="center"
+          opacity={i === bgIndex ? 1 : 0}
+          transition="opacity 2s ease-in-out"
+        />
+      ))}
 
-          {/* Main Articles 1 Section */}
-          <Box w="full">
-            <Button 
-              onClick={() => setIsOpen1(!isOpen1)} 
-              w="full" 
-              justifyContent="space-between"
-              display="flex"
-              alignItems="center"
-              fontSize="xl"
-              fontWeight="bold"
-              color="black.500"
-              borderBottom="1px solid"
+      <Box position="relative" zIndex={1}>
+        {/* Existing content */}
+        <Box position="relative" p={10}>
+          <Flex gap={6} alignItems="flex-start">
+            
+            {/* Left Side Box (Articles) */}
+            <Box
+              p={10}
+              borderWidth={1}
+              borderRadius="md"
+              boxShadow="md"
+              flex="1"
+              maxW="calc(100% - 380px)"
+              bg={bgColor}
               borderColor={borderColor}
-              py={2}
             >
-              About CPUs
-              {isOpen1 ? <ChevronUpIcon /> : <ChevronDownIcon />}
-            </Button>
+              <Heading size="xl" mb={4} color={textColor}>Articles</Heading>
 
-            <Collapse in={isOpen1} animateOpacity>
-              <VStack align="start" spacing={5} w="full" mt={3}>
-                {articlesGroup1.map((article, index) => (
-                  <HStack key={index} w="full" p={3} borderWidth={1} borderRadius="md" boxShadow="sm" borderColor={borderColor}>
-                    <Image src={article.image} w="270px" h="200px" borderRadius="md" objectFit="cover"/>
+              {/* Main Articles 1 Section */}
+              <Box w="full">
+                <Button 
+                  onClick={() => setIsOpen1(!isOpen1)} 
+                  w="full" 
+                  justifyContent="space-between"
+                  display="flex"
+                  alignItems="center"
+                  fontSize="xl"
+                  fontWeight="bold"
+                  color="black.500"
+                  borderBottom="1px solid"
+                  borderColor={borderColor}
+                  py={2}
+                >
+                  About CPUs
+                  {isOpen1 ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                </Button>
+
+                <Collapse in={isOpen1} animateOpacity>
+                  <VStack align="start" spacing={5} w="full" mt={3}>
+                    {articlesGroup1.map((article, index) => (
+                      <HStack key={index} w="full" p={3} borderWidth={1} borderRadius="md" boxShadow="sm" borderColor={borderColor}>
+                        <Image src={article.image} w="270px" h="200px" borderRadius="md" objectFit="cover"/>
+                        <Box>
+                          <Link href={article.link} isExternal fontSize="xl" fontWeight="bold" color="teal.400">
+                            {article.title}
+                          </Link>
+                          <Text fontSize="md" color={textColor}>
+                            {article.subtitle}
+                          </Text>
+                        </Box>
+                      </HStack>
+                    ))}
+                  </VStack>
+                </Collapse>
+              </Box>
+
+              {/* Main Articles 2 Section */}
+              <Box w="full" mt={5}>
+                <Button 
+                  onClick={() => setIsOpen2(!isOpen2)} 
+                  w="full" 
+                  justifyContent="space-between"
+                  display="flex"
+                  alignItems="center"
+                  fontSize="xl"
+                  fontWeight="bold"
+                  color="black.500"
+                  borderBottom="1px solid"
+                  borderColor={borderColor}
+                  py={2}
+                >
+                  About GPUs
+                  {isOpen2 ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                </Button>
+
+                <Collapse in={isOpen2} animateOpacity>
+                  <VStack align="start" spacing={5} w="full" mt={3}>
+                    {articlesGroup2.map((article, index) => (
+                      <HStack key={index} w="full" p={3} borderWidth={1} borderRadius="md" boxShadow="sm" borderColor={borderColor}>
+                        <Image src={article.image} w="270px" h="200px" borderRadius="md" objectFit="cover"/>
+                        <Box>
+                          <Link href={article.link} isExternal fontSize="xl" fontWeight="bold" color="teal.400">
+                            {article.title}
+                          </Link>
+                          <Text fontSize="md" color={textColor}>
+                            {article.subtitle}
+                          </Text>
+                        </Box>
+                      </HStack>
+                    ))}
+                  </VStack>
+                </Collapse>
+              </Box>
+
+              {/* Main Articles 3 Section */}
+              <Box w="full" mt={5}>
+                <Button 
+                  onClick={() => setIsOpen3(!isOpen3)} 
+                  w="full" 
+                  justifyContent="space-between"
+                  display="flex"
+                  alignItems="center"
+                  fontSize="xl"
+                  fontWeight="bold"
+                  color="black.500"
+                  borderBottom="1px solid"
+                  borderColor={borderColor}
+                  py={2}
+                >
+                  About Memory & Storage
+                  {isOpen3 ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                </Button>
+
+                <Collapse in={isOpen3} animateOpacity>
+                  <VStack align="start" spacing={5} w="full" mt={3}>
+                    {articlesGroup3.map((article, index) => (
+                      <HStack key={index} w="full" p={3} borderWidth={1} borderRadius="md" boxShadow="sm" borderColor={borderColor}>
+                        <Image src={article.image} w="270px" h="200px" borderRadius="md" objectFit="cover"/>
+                        <Box>
+                          <Link href={article.link} isExternal fontSize="xl" fontWeight="bold" color="teal.400">
+                            {article.title}
+                          </Link>
+                          <Text fontSize="md" color={textColor}>
+                            {article.subtitle}
+                          </Text>
+                        </Box>
+                      </HStack>
+                    ))}
+                  </VStack>
+                </Collapse>
+              </Box>
+            </Box>
+
+            {/* Top Right Box (Sources) */}
+            <Box
+              p={5}
+              borderWidth={1}
+              borderRadius="md"
+              boxShadow="lg"
+              w="320px"
+              position={{ base: "relative", lg: "absolute" }}
+              right={10}
+              top={10}
+              bg={bgColor}
+              borderColor={borderColor}
+            >
+              <Heading size="md" mb={4} color={textColor}>More Sources</Heading>
+              <VStack align="start" spacing={4}>
+                {sources.map((source, index) => (
+                  <HStack key={index} w="full">
                     <Box>
-                      <Link href={article.link} isExternal fontSize="xl" fontWeight="bold" color="teal.400">
-                        {article.title}
+                      <Link href={source.link} isExternal fontSize="sm" fontWeight="bold" color="teal.400">
+                        {source.title}
                       </Link>
-                      <Text fontSize="md" color={textColor}>
-                        {article.subtitle}
-                      </Text>
                     </Box>
+                    <Image src={source.image} boxSize="50px" borderRadius="md" />
                   </HStack>
                 ))}
               </VStack>
-            </Collapse>
-          </Box>
-
-          {/* Main Articles 2 Section */}
-          <Box w="full" mt={5}>
-            <Button 
-              onClick={() => setIsOpen2(!isOpen2)} 
-              w="full" 
-              justifyContent="space-between"
-              display="flex"
-              alignItems="center"
-              fontSize="xl"
-              fontWeight="bold"
-              color="black.500"
-              borderBottom="1px solid"
-              borderColor={borderColor}
-              py={2}
-            >
-              About GPUs
-              {isOpen2 ? <ChevronUpIcon /> : <ChevronDownIcon />}
-            </Button>
-
-            <Collapse in={isOpen2} animateOpacity>
-              <VStack align="start" spacing={5} w="full" mt={3}>
-                {articlesGroup2.map((article, index) => (
-                  <HStack key={index} w="full" p={3} borderWidth={1} borderRadius="md" boxShadow="sm" borderColor={borderColor}>
-                    <Image src={article.image} w="270px" h="200px" borderRadius="md" objectFit="cover"/>
-                    <Box>
-                      <Link href={article.link} isExternal fontSize="xl" fontWeight="bold" color="teal.400">
-                        {article.title}
-                      </Link>
-                      <Text fontSize="md" color={textColor}>
-                        {article.subtitle}
-                      </Text>
-                    </Box>
-                  </HStack>
-                ))}
-              </VStack>
-            </Collapse>
-          </Box>
-
-          {/* Main Articles 3 Section */}
-          <Box w="full" mt={5}>
-            <Button 
-              onClick={() => setIsOpen3(!isOpen3)} 
-              w="full" 
-              justifyContent="space-between"
-              display="flex"
-              alignItems="center"
-              fontSize="xl"
-              fontWeight="bold"
-              color="black.500"
-              borderBottom="1px solid"
-              borderColor={borderColor}
-              py={2}
-            >
-              About Memory & Storage
-              {isOpen3 ? <ChevronUpIcon /> : <ChevronDownIcon />}
-            </Button>
-
-            <Collapse in={isOpen3} animateOpacity>
-              <VStack align="start" spacing={5} w="full" mt={3}>
-                {articlesGroup3.map((article, index) => (
-                  <HStack key={index} w="full" p={3} borderWidth={1} borderRadius="md" boxShadow="sm" borderColor={borderColor}>
-                    <Image src={article.image} w="270px" h="200px" borderRadius="md" objectFit="cover"/>
-                    <Box>
-                      <Link href={article.link} isExternal fontSize="xl" fontWeight="bold" color="teal.400">
-                        {article.title}
-                      </Link>
-                      <Text fontSize="md" color={textColor}>
-                        {article.subtitle}
-                      </Text>
-                    </Box>
-                  </HStack>
-                ))}
-              </VStack>
-            </Collapse>
-          </Box>
+            </Box>
+          </Flex>
         </Box>
-
-        {/* Top Right Box (Sources) */}
-        <Box
-          p={5}
-          borderWidth={1}
-          borderRadius="md"
-          boxShadow="lg"
-          w="320px"
-          position={{ base: "relative", lg: "absolute" }}
-          right={10}
-          top={10}
-          bg={bgColor}
-          borderColor={borderColor}
-        >
-          <Heading size="md" mb={4} color={textColor}>More Sources</Heading>
-          <VStack align="start" spacing={4}>
-            {sources.map((source, index) => (
-              <HStack key={index} w="full">
-                <Box>
-                  <Link href={source.link} isExternal fontSize="sm" fontWeight="bold" color="teal.400">
-                    {source.title}
-                  </Link>
-                </Box>
-                <Image src={source.image} boxSize="50px" borderRadius="md" />
-              </HStack>
-            ))}
-          </VStack>
-        </Box>
-      </Flex>
+      </Box>
     </Box>
   );
 };

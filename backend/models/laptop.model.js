@@ -14,6 +14,11 @@ const laptopSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    condition: {
+      type: String,
+      required: true,
+      enum: ['New', 'Used']
+    },
     image: {
       type: String,
       required: true,

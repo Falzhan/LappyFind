@@ -19,6 +19,7 @@ import {
   useDisclosure,
   useToast,
   VStack,
+  Select,
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon, ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 import { useLaptopStore } from "../catalog/laptop";
@@ -119,7 +120,28 @@ const LaptopCard = ({ laptop }) => {
       transition="all 0.3s"
       _hover={{ transform: "translateY(-5px)", shadow: "xl" }}
       bg={bg}
+      position="relative" // Add this to enable absolute positioning of the banner
     >
+      {/* Add the condition banner */}
+      <Box
+        position="absolute"
+        top={2}
+        right={-8}
+        bg={laptop.condition === "New" ? "green.500" : "orange.500"}
+        color="white"
+        px={8}
+        py={1}
+        transform="rotate(45deg)"
+        fontWeight="bold"
+        fontSize="sm"
+        zIndex={1}
+        textAlign="center"
+        minW="120px"
+        boxShadow="md"
+      >
+        {laptop.condition}
+      </Box>
+
       <Image src={laptop.image} alt={laptop.name} h={48} w="full" objectFit="cover" />
 
       <Box p={4}>
@@ -220,6 +242,9 @@ const LaptopCard = ({ laptop }) => {
                   {laptop.source}
               </Link>
               </Text>
+              <Text>
+                <b>Condition:</b> {laptop.condition}
+              </Text>
 
               <Image src={laptop.image} alt={laptop.name} />
             </VStack>
@@ -265,6 +290,13 @@ const LaptopCard = ({ laptop }) => {
                 value={updatedLaptop.source} 
                 onChange={(e) => setUpdatedLaptop({ ...updatedLaptop, source: e.target.value })}
               />
+              <Select
+                value={updatedLaptop.condition}
+                onChange={(e) => setUpdatedLaptop({ ...updatedLaptop, condition: e.target.value })}
+              >
+                <option value="New">New</option>
+                <option value="Used">Used</option>
+              </Select>
             </VStack>
           </ModalBody>
           <ModalFooter>

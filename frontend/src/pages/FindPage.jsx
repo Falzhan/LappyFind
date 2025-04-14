@@ -34,6 +34,7 @@ const FindPage = () => {
   } = useDisclosure();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
+    condition: "", // Add this line
     usage: "",
     budget: "",
     screenSize: "",
@@ -53,19 +54,27 @@ const FindPage = () => {
     setStep(step - 1);
   };
 
+  const matchCondition = (laptop) => {
+    return laptop.condition === formData.condition;
+  };
+
   const matchUsage = (laptop) => {
     switch (formData.usage) {
       case 'browsing':
-        return laptop.specs.toLowerCase().includes('celeron');
-      case 'documents':
+        return laptop.specs.toLowerCase().includes('celeron') ||
+               laptop.specs.toLowerCase().includes('pentium');
+      case 'office tasks':
         return laptop.specs.toLowerCase().includes('core i3') || 
                laptop.specs.toLowerCase().includes('ryzen 3');
       case 'work':
-        return laptop.specs.toLowerCase().includes('core i5') || 
-               laptop.specs.toLowerCase().includes('ryzen 5');
+        return laptop.specs.toLowerCase().includes('core i5') ||
+               laptop.specs.toLowerCase().includes('core i7') || 
+               laptop.specs.toLowerCase().includes('ryzen 5') || 
+               laptop.specs.toLowerCase().includes('ryzen 7') ;
       case 'gaming':
-        return (laptop.specs.toLowerCase().includes('rtx') || 
-               laptop.specs.toLowerCase().includes('gtx')) &&
+        return (laptop.specs.toLowerCase().includes('rtx')|| 
+               laptop.specs.toLowerCase().includes('gtx') ||
+               laptop.specs.toLowerCase().includes('mx')) &&
                laptop.specs.toLowerCase().includes('nvidia');
       default:
         return false;
@@ -102,9 +111,28 @@ const FindPage = () => {
     return laptop.price <= maxBudget;
   };
 
+  // Add this helper function after the existing matchBudget function
+  const getFormattedSelections = () => {
+    const selections = [];
+    
+    if (formData.condition) selections.push(formData.condition);
+    if (formData.usage) selections.push(formData.usage.charAt(0).toUpperCase() + formData.usage.slice(1));
+    if (formData.budget) selections.push(`₱${formData.budget}`);
+    if (formData.screenSize) {
+      const sizeLabels = {
+        small: "Small Screen",
+        medium: "Medium Screen",
+        large: "Large Screen"
+      };
+      selections.push(sizeLabels[formData.screenSize]);
+    }
+    
+    return selections.length > 0 ? selections.join(" - ") : "";
+  };
+
   const handleSearch = () => {
     const filtered = laptops.filter((laptop) => 
-      matchUsage(laptop) && matchScreenSize(laptop) && matchBudget(laptop)
+      matchCondition(laptop) && matchUsage(laptop) && matchScreenSize(laptop) && matchBudget(laptop)
     );
 
     setFilteredLaptops(filtered);
@@ -113,16 +141,17 @@ const FindPage = () => {
 
   const updateAvailableLaptopsCount = () => {
     const filtered = laptops.filter((laptop) => {
+      const conditionMatch = !formData.condition || matchCondition(laptop);
       const usageMatch = !formData.usage || matchUsage(laptop);
       const screenMatch = !formData.screenSize || matchScreenSize(laptop);
       const budgetMatch = !formData.budget || matchBudget(laptop);
       
-      return usageMatch && screenMatch && budgetMatch;
+      return conditionMatch && usageMatch && screenMatch && budgetMatch;
     });
 
     setAvailableLaptops(filtered.length);
     
-    if (filtered.length === 0 && (formData.usage || formData.budget || formData.screenSize)) {
+    if (filtered.length === 0 && (formData.condition || formData.usage || formData.budget || formData.screenSize)) {
       onNoLaptopsOpen();
     }
   };
@@ -147,6 +176,16 @@ const FindPage = () => {
   const selectedBg = useColorModeValue("teal.100", "teal.700");
   const selectedBorder = useColorModeValue("teal.500", "teal.200");
 
+  const handleReset = () => {
+    setFormData({
+      condition: "",
+      usage: "",
+      budget: "",
+      screenSize: "",
+    });
+    setStep(1);
+  };
+
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -160,26 +199,28 @@ const FindPage = () => {
             transition="all 0.3s"
           >
             <Text fontSize="2xl" fontWeight="bold" mb={8} textAlign="center" color={textColor}>
-              What would you be using your laptop for?
+              How would you like your laptop?
             </Text>
             <Stack spacing={4}>
-              {["browsing", "documents", "gaming", "work"].map((option) => (
+              {[
+                { value: "New", label: "Brand New" },
+                { value: "Used", label: "Used" }
+              ].map((option) => (
                 <Box
-                  key={option}
+                  key={option.value}
                   as="button"
                   w="full"
                   p={4}
-                  textAlign="left"
+                  textAlign="center" 
                   borderRadius="md"
-                  bg={formData.usage === option ? selectedBg : buttonBg}
+                  bg={formData.condition === option.value ? selectedBg : buttonBg}
                   border="2px"
-                  borderColor={formData.usage === option ? selectedBorder : "transparent"}
-                  _hover={{ bg: formData.usage === option ? selectedBg : buttonHoverBg }}
-                  onClick={() => setFormData({ ...formData, usage: option })}
-                  textTransform="capitalize"
+                  borderColor={formData.condition === option.value ? selectedBorder : "transparent"}
+                  _hover={{ bg: formData.condition === option.value ? selectedBg : buttonHoverBg }}
+                  onClick={() => setFormData({ ...formData, condition: option.value })}
                   transition="all 0.2s"
                 >
-                  {option}
+                  {option.label}
                 </Box>
               ))}
             </Stack>
@@ -197,22 +238,58 @@ const FindPage = () => {
             transition="all 0.3s"
           >
             <Text fontSize="2xl" fontWeight="bold" mb={8} textAlign="center" color={textColor}>
+              What would you be using your laptop for?
+            </Text>
+            <Stack spacing={4}>
+              {["browsing", "office tasks", "gaming", "work"].map((option) => (
+                <Box
+                  key={option}
+                  as="button"
+                  w="full"
+                  p={4}
+                  textAlign="center"  // Changed from 'left' to 'center'
+                  borderRadius="md"
+                  bg={formData.usage === option ? selectedBg : buttonBg}
+                  border="2px"
+                  borderColor={formData.usage === option ? selectedBorder : "transparent"}
+                  _hover={{ bg: formData.usage === option ? selectedBg : buttonHoverBg }}
+                  onClick={() => setFormData({ ...formData, usage: option })}
+                  textTransform="capitalize"
+                  transition="all 0.2s"
+                >
+                  {option}
+                </Box>
+              ))}
+            </Stack>
+          </Box>
+        );
+
+      case 3:
+        return (
+          <Box
+            w="full"
+            bg={boxBg}
+            p={8}
+            borderRadius="xl"
+            boxShadow={boxShadow}
+            transition="all 0.3s"
+          >
+            <Text fontSize="2xl" fontWeight="bold" mb={8} textAlign="center" color={textColor}>
               What is your budget?
             </Text>
             <Stack spacing={4}>
               {[
-                { value: "15000", label: "Up to ₱15,000" },
-                { value: "20000", label: "Up to ₱20,000" },
-                { value: "30000", label: "Up to ₱30,000" },
-                { value: "40000", label: "Up to ₱40,000" },
-                { value: "50000", label: "₱50,000 and above" },
+                { value: "20000", label: "Below ₱20,000" },
+                { value: "30000", label: "Below ₱30,000" },
+                { value: "40000", label: "Below ₱40,000" },
+                { value: "50000", label: "Up to ₱50,000 and above" },
               ].map((option) => (
                 <Box
                   key={option.value}
                   as="button"
                   w="full"
                   p={4}
-                  textAlign="left"
+                  textAlign="center"  // Changed from 'left' to 'center'
                   borderRadius="md"
                   bg={formData.budget === option.value ? selectedBg : buttonBg}
                   border="2px"
@@ -228,7 +305,7 @@ const FindPage = () => {
           </Box>
         );
 
-      case 3:
+      case 4:
         return (
           <Box
             w="full"
@@ -252,7 +329,7 @@ const FindPage = () => {
                   as="button"
                   w="full"
                   p={4}
-                  textAlign="left"
+                  textAlign="center"  // Changed from 'left' to 'center'
                   borderRadius="md"
                   bg={formData.screenSize === option.value ? selectedBg : buttonBg}
                   border="2px"
@@ -312,40 +389,59 @@ const FindPage = () => {
       ))}
 
       {/* Existing content wrapped in Container */}
-      <Container maxW="container.md" py={12} position="relative" zIndex={1}>
-        <VStack spacing={8} align="stretch">
-          <Progress value={(step / 3) * 100} size="sm" colorScheme="teal" mb={8} />
+      <Container maxW="container.md" py={12} pb={24} position="relative" zIndex={1}>
+        <VStack spacing={8} align="stretch" mb={16}>
+          <Progress value={(step / 4) * 100} size="sm" colorScheme="teal" mb={8} />
           
           {renderStep()}
 
-          <Stack direction="row" spacing={4} justify="center" mt={8}>
+          {/* Replace the existing Stack component containing the buttons with this: */}
+          <Stack direction="row" spacing={4} justify="space-between" mt={8} w="full">
+            <Box>
+              {step > 1 && (
+                <Button size="lg" onClick={handleBack} variant="outline" colorScheme="teal">
+                  Back
+                </Button>
+              )}
+            </Box>
+
+            {/* Only show Reset button after step 1 */}
             {step > 1 && (
-              <Button size="lg" onClick={handleBack} variant="outline" colorScheme="teal">
-                Back
-              </Button>
-            )}
-            {step < 3 ? (
               <Button
                 size="lg"
-                onClick={handleNext}
-                colorScheme="teal"
-                isDisabled={
-                  (step === 1 && !formData.usage) ||
-                  (step === 2 && !formData.budget)
-                }
+                onClick={handleReset}
+                colorScheme="gray"
+                variant="outline"
               >
-                Next
-              </Button>
-            ) : (
-              <Button
-                size="lg"
-                onClick={handleSearch}
-                colorScheme="teal"
-                isDisabled={!formData.screenSize}
-              >
-                Find your laptop
+                Reset
               </Button>
             )}
+
+            <Box>
+              {step < 4 ? (
+                <Button
+                  size="lg"
+                  onClick={handleNext}
+                  colorScheme="teal"
+                  isDisabled={
+                    (step === 1 && !formData.condition) ||
+                    (step === 2 && !formData.usage) ||
+                    (step === 3 && !formData.budget)
+                  }
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  onClick={handleSearch}
+                  colorScheme="teal"
+                  isDisabled={!formData.screenSize}
+                >
+                  Find your laptop
+                </Button>
+              )}
+            </Box>
           </Stack>
         </VStack>
 
@@ -363,9 +459,16 @@ const FindPage = () => {
           zIndex={1000}
         >
           <Container maxW="container.md">
-            <Text textAlign="center" fontWeight="bold" color={textColor}>
-              Available Laptops: {availableLaptops}
-            </Text>
+            <VStack spacing={1}>
+              {getFormattedSelections() && (
+                <Text textAlign="center" color={textColor}>
+                  {getFormattedSelections()}
+                </Text>
+              )}
+              <Text textAlign="center" fontWeight="bold" color={textColor}>
+                Available Laptops: {availableLaptops}
+              </Text>
+            </VStack>
           </Container>
         </Box>
 

@@ -12,21 +12,28 @@ export const getLaptops = async (req, res) => {
 };
 
 export const createLaptop = async (req, res) => {
-    const laptop = req.body; //user send data
-    
-    if(!laptop.name || !laptop.specs || !laptop.price || !laptop.image || !laptop.uploader || !laptop.source) {
-            return res.status(400).json({ success:false, message: "Please fill all fields" });
-     }
-    
-    const newLaptop = new Laptop(laptop);
-    
     try {
-        await newLaptop.save();
-            res.status (201).json({ success: true, data: newLaptop});
-    }   catch (error) {
-            console.error("Error in Adding Laptop: ", error.message);
-            res.status(500).json({success:false, message: "Server Error"});
+        const { name, specs, price, condition, image, uploader, source } = req.body;
+        const newLaptop = new Laptop({
+            name,
+            specs,
+            price,
+            condition,
+            image,
+            uploader,
+            source
+        });
+
+        if (!name || !specs || !price || !image || !uploader || !source) {
+            return res.status(400).json({ success: false, message: "Please fill all fields" });
         }
+
+        await newLaptop.save();
+        res.status(201).json({ success: true, data: newLaptop });
+    } catch (error) {
+        console.error("Error in Adding Laptop: ", error.message);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
 };
 
 export const updateLaptop = async (req, res) => {

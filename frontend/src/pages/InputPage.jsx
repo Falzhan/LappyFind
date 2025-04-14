@@ -82,6 +82,15 @@ const gpuOptions = [
   "Intel UHD Graphics 630",
   "Intel Iris Plus Graphics",
   "Intel Iris Xe Graphics",
+  "NVIDIA GeForce MX110",
+  "NVIDIA GeForce MX130",
+  "NVIDIA GeForce MX150",
+  "NVIDIA GeForce MX230",
+  "NVIDIA GeForce MX250",
+  "NVIDIA GeForce MX330",
+  "NVIDIA GeForce MX350",
+  "NVIDIA GeForce MX450",
+  "NVIDIA GeForce MX550",
   "NVIDIA GeForce GTX 1650",
   "NVIDIA GeForce GTX 1660 Ti",
   "NVIDIA GeForce RTX 2050",
@@ -104,6 +113,10 @@ const gpuOptions = [
 ];
 
 const ramOptions = [
+  "4GB DDR3",
+  "8GB DDR3",
+  "16GB DDR3",
+  "32GB DDR3",
   "4GB DDR4",
   "8GB DDR4",
   "16GB DDR4",
@@ -119,8 +132,21 @@ const storageOptions = [
   "256GB SSD",
   "512GB SSD",
   "1TB SSD",
+  
+  "512GB HDD",
   "1TB HDD",
   "2TB HDD",
+
+  "128GB SSD + 512GB HDD",
+  "128GB SSD + 1TB HDD",
+  "128GB SSD + 2TB HDD",
+  "256GB SSD + 512GB HDD",
+  "256GB SSD + 1TB HDD",
+  "256GB SSD + 2TB HDD",
+  "512GB SSD + 1TB HDD",
+  "512GB SSD + 2TB HDD",
+  "1TB SSD + 1TB HDD",
+  "1TB SSD + 2TB HDD"
 ];
 
 const InputPage = () => {
@@ -130,6 +156,7 @@ const InputPage = () => {
     specs: "",
     price: "",
     image: "",
+    condition: "",
     uploader: user?.username || user?.email || "User", // Initialize with the user's name or email
   });
 
@@ -168,6 +195,7 @@ const InputPage = () => {
       specs: "",
       price: "",
       image: "",
+      condition: "",
       uploader: user?.username || user?.email || "User",
     });
     setSearchTerm("");
@@ -282,6 +310,23 @@ const InputPage = () => {
               value={newLaptop.image}
               onChange={(e) => setNewLaptop({ ...newLaptop, image: e.target.value })}
             />
+            <select 
+              style={{
+                width: '100%',
+                padding: '8px',
+                borderRadius: '6px',
+                border: '1px solid',
+                borderColor: useColorModeValue('gray.200', 'gray.600'),
+              }}
+              name="condition"
+              value={newLaptop.condition}
+              onChange={(e) => setNewLaptop({ ...newLaptop, condition: e.target.value })}
+              required
+            >
+              <option value="">Select Condition</option>
+              <option value="New">New</option>
+              <option value="Used">Used</option>
+            </select>
             <Input
               placeholder="Sources"
               name="source"

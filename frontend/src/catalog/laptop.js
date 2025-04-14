@@ -6,7 +6,7 @@ export const useLaptopStore = create((set) => ({
 
   // Add a new laptop
   addLaptop: async (newLaptop) => {
-    if (!newLaptop.name || !newLaptop.specs || !newLaptop.image || !newLaptop.price || !newLaptop.uploader) {
+    if (!newLaptop.name || !newLaptop.specs || !newLaptop.image || !newLaptop.price || !newLaptop.uploader || !newLaptop.condition) {
       return { success: false, message: "Please fill in all fields." };
     }
     const res = await fetch("/api/laptops", {
@@ -14,7 +14,15 @@ export const useLaptopStore = create((set) => ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newLaptop),
+      body: JSON.stringify({
+        name: newLaptop.name,
+        specs: newLaptop.specs,
+        price: newLaptop.price,
+        condition: newLaptop.condition,
+        image: newLaptop.image,
+        uploader: newLaptop.uploader,
+        source: newLaptop.source,
+      }),
     });
     const data = await res.json();
     set((state) => ({ laptops: [...state.laptops, data.data] }));

@@ -112,6 +112,22 @@ const LaptopCard = ({ laptop }) => {
 
   const isUploader = user?.username === laptop.uploader || user?.email === laptop.uploader;
 
+  const isValidUrl = (string) => {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  };
+
+  const getStoreLink = (source) => {
+    if (isValidUrl(source)) {
+      return source;
+    }
+    return `https://www.google.com/search?q=${encodeURIComponent(source)}`;
+  };
+
   return (
     <Box
       shadow="lg"
@@ -238,7 +254,7 @@ const LaptopCard = ({ laptop }) => {
                 <b>Sourced from:</b> {laptop.uploader}
               </Text>
               <Text>
-                <b>Store:</b> <Link href={laptop.source} isExternal color="white.500">
+                <b>Store:</b> <Link href={getStoreLink(laptop.source)} isExternal color="teal.500" _hover={{ textDecoration: "underline" }}>
                   {laptop.source}
               </Link>
               </Text>

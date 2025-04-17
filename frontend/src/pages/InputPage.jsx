@@ -47,6 +47,7 @@ const cpuOptions = [
   "Core i7-9750H",
   "Core i9-9980HK",
   "Core i3-10110U",
+  "Core i5-10310u",
   "Core i5-10210U",
   "Core i5-10300H",
   "Core i7-1065G7",
@@ -216,22 +217,45 @@ const parseSpecSheet = (text) => {
 
   // Find CPU
   // Check for Intel patterns
-  const intelPattern = /(?:core\s+)?i[3579]-\d{4,5}[a-z0-9]*/i;
+  const intelPattern = /(?:intel\s+)?(?:core\s+)?i[3579](?:[- ]+\d{4,5}[a-z0-9]*|\s+\d{4,5}[a-z0-9]*)/i;
   const intelMatch = lowerText.match(intelPattern);
   if (intelMatch) {
-    const cpuModel = intelMatch[0];
+    const cpuModel = intelMatch[0]
+      .toLowerCase()
+      .replace('intel', '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    
+    // Format the CPU model to match the standard format
+    const formattedCpu = cpuModel
+      .replace(/^i([3579])\s+(\d{4,5}[a-z0-9]*)/, 'core i$1-$2')
+      .replace(/^i([3579])-(\d{4,5}[a-z0-9]*)/, 'core i$1-$2');
+
     result.cpu = cpuOptions.find(cpu => 
-      cpu.toLowerCase().includes(cpuModel.toLowerCase())
-    ) || `Core ${cpuModel.charAt(0).toUpperCase() + cpuModel.slice(1)}`;
+      cpu.toLowerCase() === formattedCpu.toLowerCase()
+    ) || `Core ${formattedCpu.charAt(0).toUpperCase() + formattedCpu.slice(1)}`;
   }
 
   // Check for AMD patterns
-  const amdPattern = /(?:amd\s+)?(?:ryzen|r)[3579]\s*-?\s*\d{4}[a-z0-9]*/i;
+  const amdPattern = /(?:amd\s+)?(?:ryzen|r)\s*([3579])\s*-?\s*(\d{4}[a-z0-9]*)/i;
   const amdMatch = lowerText.match(amdPattern);
   if (amdMatch) {
-    let cpuModel = amdMatch[0].replace(/^r(\d)/, 'ryzen $1');
+    // Format the CPU model to match the standard format
+    let cpuModel = amdMatch[0]
+      .toLowerCase()
+      .replace(/amd\s+/i, '')
+      .replace(/^r\s*([3579])/i, 'ryzen $1')
+      .replace(/^ryzen\s*([3579])/i, 'ryzen $1')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    // Standardize the format
+    cpuModel = cpuModel
+      .replace(/ryzen\s*([3579])\s*-?\s*(\d{4}[a-z0-9]*)/i, 'Ryzen $1 $2')
+      .toUpperCase();
+
     result.cpu = cpuOptions.find(cpu => 
-      cpu.toLowerCase().includes(cpuModel.toLowerCase())
+      cpu.toUpperCase() === cpuModel
     );
   }
 
@@ -258,15 +282,23 @@ const parseSpecSheet = (text) => {
     result.ram = `${size}GB ${type}`;
   }
 
-  // Find Storage - Keep existing pattern but process it first
-  const storagePattern = /(\d+)\s*(?:gb|tb)\s*(?:nvme\s*)?(?:pcie\s*)?(?:m\.2\s*)?ssd|(\d+)\s*(?:gb|tb)\s*hdd/ig;
-  const storageMatches = [...lowerText.matchAll(storagePattern)];
-  if (storageMatches.length > 0) {
-    const storageString = storageMatches.map(match => match[0].toUpperCase()
+  // Find Storage - Updated pattern to better handle multiple storage configs
+  const storagePattern = /(\d+(?:\s*(?:gb|tb))\s*(?:(?:nvme|pcie|m\.2)\s*)?(?:ssd|hdd))/gi;
+  const storages = [...lowerText.matchAll(storagePattern)].map(match => 
+    match[0].toUpperCase()
       .replace(/NVME|PCIE|M\.2/gi, '')
       .replace(/\s+/g, '')
-    ).join(' + ');
-    
+  );
+
+  if (storages.length > 0) {
+    // Sort storages to ensure SSD comes before HDD if both exist
+    storages.sort((a, b) => {
+      const aIsSSD = a.includes('SSD');
+      const bIsSSD = b.includes('SSD');
+      return bIsSSD - aIsSSD; // This puts SSDs first
+    });
+
+    const storageString = storages.join(' + ');
     result.storage = storageOptions.find(s => 
       s.replace(/\s+/g, '') === storageString
     ) || storageString;
@@ -443,7 +475,7 @@ const InputPage = () => {
           >
             <VStack spacing={4}>
               <Text fontSize="md" fontWeight="medium" color={useColorModeValue("gray.600", "gray.300")}>
-                Quick Fill - Paste Specs
+                Paste Specs Here
               </Text>
               <Textarea
                 placeholder="Paste all specs in here to auto-fill fields below

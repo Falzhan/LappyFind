@@ -86,7 +86,7 @@ const FindPage = () => {
       case 'small':
         return laptop.name.toLowerCase().includes('14"') || 
                laptop.name.toLowerCase().includes('11.6"');
-      case 'medium':
+      case 'normal':
         return laptop.name.toLowerCase().includes('15.6"');
       case 'large':
         return laptop.name.toLowerCase().includes('16"');
@@ -121,7 +121,7 @@ const FindPage = () => {
     if (formData.screenSize) {
       const sizeLabels = {
         small: "Small Screen",
-        medium: "Medium Screen",
+        normal: "Normal Screen",
         large: "Large Screen"
       };
       selections.push(sizeLabels[formData.screenSize]);
@@ -241,7 +241,7 @@ const FindPage = () => {
               What would you be using your laptop for?
             </Text>
             <Stack spacing={4}>
-              {["browsing", "office tasks", "gaming", "work"].map((option) => (
+              {["browsing", "office tasks", "work", "gaming"].map((option) => (
                 <Box
                   key={option}
                   as="button"
@@ -321,7 +321,7 @@ const FindPage = () => {
             <Stack spacing={4}>
               {[
                 { value: "small", label: "Small (14\" and below)" },
-                { value: "medium", label: "Medium (15.6\")" },
+                { value: "normal", label: "Normal (15.6\")" },
                 { value: "large", label: "Large (16\" and above)" },
               ].map((option) => (
                 <Box
@@ -388,7 +388,7 @@ const FindPage = () => {
         />
       ))}
 
-      {/* Existing content wrapped in Container */}
+      {/* Existing content wrapped in Container */ }
       <Container maxW="container.md" py={12} pb={24} position="relative" zIndex={1}>
         <VStack spacing={8} align="stretch" mb={16}>
           <Progress value={(step / 4) * 100} size="sm" colorScheme="teal" mb={8} />
